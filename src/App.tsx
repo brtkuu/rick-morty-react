@@ -1,24 +1,52 @@
-import React from 'react';
-import logo from './logo.svg';
+import axios, { AxiosResponse } from 'axios';
+import { useEffect, useState } from 'react';
 import './App.css';
 
+class Character {
+  name: string;
+  id: number | null;
+
+  constructor(data: Record<string, any>) {
+    this.name = data?.name || '';
+    this.id = data?.id || null;
+  }
+}
+
 function App() {
+  const [counter, setCounter] = useState(0);
+  const [characters, setCharacters] = useState([]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      const res: AxiosResponse = await axios.get('https://rickandmortyapi.com/api/character');
+      setCharacters(res.data.results.map((character: Record<string, any>) => new Character(character)));
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  const list = () => {
+    return characters.map((character:Character) => <li key={character.id}>{character.name}</li>);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {counter}
+      <button
+          onClick={() => setCounter(counter + 1)}
+      >
+        Click!
+      </button>
+      <button
+          onClick={() => getData()}
+      >
+        Get Data!
+      </button>
+      {list()}
     </div>
   );
 }
