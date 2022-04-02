@@ -1,4 +1,4 @@
-import { Component, FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import '../../assets/scss/_header.scss';
 
 type HeaderProps = {
@@ -20,6 +20,7 @@ function Header(props: HeaderProps) {
           <img
               src="./images/rm_logo.png"
               className="header__logo"
+              alt="Rick Morty logo"
           />
           <div className="header__search-container">
             <input
