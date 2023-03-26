@@ -35,6 +35,7 @@ function App() {
 	const [characters, setCharacters] = useState([]);
 	const [pagesNumber, setPagesNumber] = useState(0);
 	const [searchName, setSearchName] = useState("");
+	const [favorites, setFavorites] = useState<Array<number | undefined>>([]);
 	const location = useLocation();
 
 	//mounted
@@ -52,6 +53,7 @@ function App() {
 			setSearchName(name);
 		}
 		getData(counter, searchName);
+		setFavorites(store.getState());
 	}, []);
 
 	//pagination
@@ -101,20 +103,22 @@ function App() {
 	};
 
 	//add to fav
-	const addToFavorites = (id: number | null) => {
-		if (id) {
+	const toggleFavorites = (id: number) => {
+		if(favorites.includes(id)) {
+			store.dispatch({type: "REMOVE_FAVORITE", payload: id});
+		} else {
 			store.dispatch({ type: "ADD_FAVORITE", payload: id });
 		}
-	};
 
-	useEffect(() => {}, [store.getState()]);
+		setFavorites(store.getState());
+	};
 
 	//render list of characters
 	const list = () => {
 		return characters.map((character: Character) => (
 			<div
 				className={`character-list__element ${
-					store.getState().includes(character.id as number)
+					favorites.includes(character.id as number)
 						? "favorite"
 						: ""
 				}`}
@@ -146,7 +150,7 @@ function App() {
 				<p>
 					<FontAwesomeIcon
 						icon={faStar}
-						onClick={() => addToFavorites(character.id)}
+						onClick={() => toggleFavorites(character.id as number)}
 					/>
 				</p>
 			</div>
