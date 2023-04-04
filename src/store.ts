@@ -1,6 +1,13 @@
-import { createStore } from "redux";
+import {configureStore} from '@reduxjs/toolkit'
 import favoritesReducer from "./reducers/counter";
 
-export const store = createStore(favoritesReducer);
+export const store = configureStore({
+  reducer: {
+    favorites: favoritesReducer
+  }
+})
 
-store.subscribe(() => console.log(store.getState()));
+// Infer the `RootState` and `AppDispatch` types from the store itself
+export type RootState = ReturnType<typeof store.getState>
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch

@@ -3,11 +3,12 @@ import { useEffect, useState } from "react";
 import "../App.scss";
 import Header from "./molecules/Header";
 import Pagination from "./molecules/Pagination";
-import { store } from "../store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 import React from "react";
+import { useAppSelector, useAppDispatch } from "../hooks";
+import { ADD_FAVORITE, REMOVE_FAVORITE } from "../reducers/counter";
 
 class Character {
 	name: string;
@@ -35,8 +36,9 @@ function App() {
 	const [characters, setCharacters] = useState([]);
 	const [pagesNumber, setPagesNumber] = useState(0);
 	const [searchName, setSearchName] = useState("");
-	const [favorites, setFavorites] = useState<Array<number | undefined>>([]);
 	const location = useLocation();
+	const dispatch = useAppDispatch();
+	const {favorites} = useAppSelector((state) => state.favorites);
 
 	//mounted
 
@@ -53,7 +55,6 @@ function App() {
 			setSearchName(name);
 		}
 		getData(counter, searchName);
-		setFavorites(store.getState());
 	}, []);
 
 	//pagination
@@ -105,12 +106,10 @@ function App() {
 	//add to fav
 	const toggleFavorites = (id: number) => {
 		if(favorites.includes(id)) {
-			store.dispatch({type: "REMOVE_FAVORITE", payload: id});
+			dispatch(REMOVE_FAVORITE(id));
 		} else {
-			store.dispatch({ type: "ADD_FAVORITE", payload: id });
+			dispatch(ADD_FAVORITE(id));
 		}
-
-		setFavorites(store.getState());
 	};
 
 	//render list of characters
@@ -177,12 +176,6 @@ function App() {
 						</p>
 						<p
 							className="character-list__header-element"
-							onClick={() => {
-								store.dispatch({
-									type: "favorites/addnew",
-									payload: 1,
-								});
-							}}
 						>
 							Favorite
 						</p>

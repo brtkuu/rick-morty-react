@@ -1,22 +1,28 @@
-const initialState: Array<number | undefined> = [];
+import { createSlice } from '@reduxjs/toolkit';
 
-type ActionType = {
-	type: string;
-	payload?: number;
-};
+interface FavoritesState {
+	favorites: Array<Number>
+}
 
-const favoritesReducer = (
-	state: Array<number | undefined> = initialState,
-	action: ActionType
-) => {
-	switch (action.type) {
-		case "ADD_FAVORITE":
-			return [...state, action.payload];
-		case "REMOVE_FAVORITE":
-			return [...state].filter(ele => ele !== action.payload);
-		default:
-			return state;
-	}
-};
+const initialState: FavoritesState = {
+	favorites: []
+}
 
-export default favoritesReducer;
+export const favoritesSlice = createSlice({
+  name: "favorites",
+	initialState,
+  reducers: {
+    ADD_FAVORITE: (state: any, action) => {
+			state.favorites.push(action.payload);
+    },
+		REMOVE_FAVORITE: (state: any, action) => {
+			state.favorites = [...state.favorites].filter(ele => ele !== action.payload);
+		}
+  }
+});
+
+// Action creators are generated for each case reducer function
+export const { ADD_FAVORITE, REMOVE_FAVORITE } = favoritesSlice.actions;
+
+export default favoritesSlice.reducer;
+
