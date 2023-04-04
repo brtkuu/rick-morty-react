@@ -8,7 +8,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { useLocation } from "react-router-dom";
 import React from "react";
 import { useAppSelector, useAppDispatch } from "../hooks";
-import { ADD_FAVORITE, REMOVE_FAVORITE } from "../reducers/counter";
+import { ADD_FAVORITE, REMOVE_FAVORITE } from "../reducers/favorites";
 
 class Character {
 	name: string;
